@@ -1,0 +1,6 @@
+Makefile.PL
+MANIFEST
+README
+t/Dir-Self.t
+lib/Dir/Self.pm
+META.yml                                 Module meta-data (added by MakeMaker)
