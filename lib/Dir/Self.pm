@@ -5,7 +5,7 @@ use strict;
 
 use File::Spec ();
 
-*VERSION = \'0.02';
+*VERSION = \'0.03';
 
 sub _croak {
 	require Carp;
@@ -17,7 +17,7 @@ sub _croak {
 sub __DIR__ () {
 	my $level = shift || 0;
 	my $file = (caller $level)[1];
-	File::Spec->rel2abs((File::Spec->splitpath($file))[1])
+	File::Spec->rel2abs(join '', (File::Spec->splitpath($file))[0, 1])
 }
 
 sub _const {
@@ -81,7 +81,7 @@ Lukas Mai, E<lt>l.mai @web.deE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2007 by Lukas Mai
+Copyright (C) 2007, 2008 by Lukas Mai
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.8 or,
