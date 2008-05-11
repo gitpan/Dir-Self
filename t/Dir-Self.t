@@ -1,8 +1,7 @@
 #!perl -w
+use strict;
 
-# change 'tests => 1' to 'tests => last_test_to_print';
-
-use Test::More tests => 2;
+use Test::More tests => 3;
 
 use Dir::Self;
 ok 1, 'use Dir::Self';
@@ -13,3 +12,7 @@ ok 1, 'use Dir::Self';
 # its man page ( perldoc Test::More ) for help writing this test script.
 
 like __DIR__, '/\bt$/';
+
+use lib __DIR__;
+require "zerlegungsgleichheit/d.t";
+like zd(), '/\bzerlegungsgleichheit$/';

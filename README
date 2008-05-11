@@ -1,4 +1,4 @@
-Dir-Self version 0.03
+Dir-Self version 0.10
 =====================
 
 Provides a __DIR__ pseudo-constant expanding to the full path to the

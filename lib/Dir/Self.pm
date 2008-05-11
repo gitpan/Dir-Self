@@ -5,7 +5,7 @@ use strict;
 
 use File::Spec ();
 
-*VERSION = \'0.03';
+*VERSION = \'0.10';
 
 sub _croak {
 	require Carp;
@@ -29,12 +29,19 @@ sub import {
 	my $class = shift;
 	my $caller = caller;
 
-	for my $item (@_) {
-		$item eq '__DIR__' or _croak qq{"$item" is not exported by the $class module};
-	}
+	@_ or @_ = '__DIR__';
 
-	no strict 'refs';
-	*{$caller . "::__DIR__"} = _const &__DIR__(1);
+	for my $item (@_) {
+		if ($item eq '__DIR__') {
+			no strict 'refs';
+			*{$caller . '::__DIR__'} = \&__DIR__;
+		} elsif ($item eq ':static') {
+			no strict 'refs';
+			*{$caller . '::__DIR__'} = _const &__DIR__(1);
+		} else {
+			_croak qq{"$item" is not exported by the $class module};
+		}
+	}
 }
 
 1
@@ -63,21 +70,15 @@ helper modules or configuration data. This is a bit like L<FindBin> except
 it's not limited to the main program, i.e. you can also use it in modules. And
 it actually works.
 
-=head1 BUGS
-
-This module cheats. It generates a C<__DIR__> constant when it is C<use>d; any
-subsequent uses of this C<__DIR__> won't pay attention to the actual source
-location. So if you have two source files with the same C<package> declaration
-in different directories, and one of them uses L<Dir::Self>, and the other
-calls __DIR__, it will get the location of the C<use>, i.e. the first file.
-
-This is unlikely to be a problem because normally each library file gets its
-own package; but you can always use Dir::Self::__DIR__, which recomputes the
-directory name each time it's called.
+As of version 0.10 each use of C<__DIR__> recomputes the directory name; this
+ensures that files in different directories that share the same package name
+get correct results. If you don't want this, C<use Dir::Self qw(:static)> will
+create a true C<__DIR__> constant in your package that contains the directory
+name at the point of C<use>.
 
 =head1 AUTHOR
 
-Lukas Mai, E<lt>l.mai @web.deE<gt>
+Lukas Mai E<lt>l.mai @web.deE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
